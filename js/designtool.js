@@ -233,9 +233,8 @@ function get_per_phi(perGamma, perDiffType) {
      	    		}
      	    }
 }
+*/
 
-
- */
 function intAvgOZT_calc(intAirflowRate) {
     intAirflowRateM = intAirflowRate * 0.0004719474; // m^3/s
     
@@ -688,51 +687,8 @@ function draw_charts() {
           	Temperature : Math.round(intReturnT*10)/10,
           	Height: Math.round(intRoomHeightIn*10)/10
           }
-];
-/*
-var indata = [
-          {
-          	Point : 1.1,
-          	Temperature : 63.1 ,
-          	Height : -10.1
-          },
-          {
-          	Point : 2.1,
-          	Temperature : 66.1,
-          	Height : -10.1
-          },
-          {
-          	Point : 3.1,
-          	Temperature : 66.1 ,
-          	Height: 0.1
-          },
-          {
-          	Point : 4.1,
-          	Temperature : 72.1,
-          	Height: 4.1
-          },
-          {
-          	Point : 5.1,
-          	Temperature : 75.1,
-          	Height: 36.1
-          },
-          {
-          	Point : 6.1,
-          	Temperature : 76.1,
-          	Height: 48.1
-          },
-          {
-          	Point : 7.1,
-          	Temperature : 76.1,
-          	Height: 67.1
-          },
-          {
-          	Point : 8.1, 
-          	Temperature : 77.1,
-          	Height: 107.1
-          }
-];
-*/
+    ];
+
     var pedata = [
           {
           	Point : 1,
@@ -774,7 +730,7 @@ var indata = [
           	Temperature : Math.round(perReturnT*10)/10,
           	Height: Math.round(perRoomHeightIn*10)/10
           }	,
-];
+    ];
 
     
     $("#draw_chart1").empty();
@@ -1406,7 +1362,14 @@ var intDiff = [
         selected: false,
         description: "VAV Directional Diffuser for interior zone",
         imageSrc: "img/Diffuser_Square.JPG"
-	}
+	},
+  {
+    text: "Round",
+    value: "Round",
+    selected: false,
+    description: "",
+    imageSrc: "img/Diffuser_Round.PNG"
+  }
 ];
 
 var perDiff = [
