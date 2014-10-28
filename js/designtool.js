@@ -1122,7 +1122,7 @@ var perDiff = [{
     text: "VAV directional",
     value: 'VAV Directional Per.',
     selected: false,
-    description: "VAV Directional Diffuser for perimeter zone",
+    description: "",
     imageSrc: "img/Diffuser_Square.JPG"
 }, {
     text: "Linear Bar Grille #1",
