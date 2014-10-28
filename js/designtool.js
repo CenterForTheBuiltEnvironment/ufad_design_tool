@@ -1,4 +1,4 @@
-/ar SI = false;
+var SI = false;
 
 function satInput() {
     var input = document.forms['input'];
@@ -107,7 +107,7 @@ function get_int_phi(intGamma, intDiffType) {
             intPhi4 = 0.5076;
             intPhi67 = 0.9264;
         }
-    } else if (intDiffType === 'Horizontal') {
+    } else if (intDiffType === 'Displacement') {
         intPhi4 = 0.38;
         intPhi67 = 0.94;
     }
@@ -577,7 +577,7 @@ function handle_output() {
             $("#intA3").css("color", "red");
         } else if (intDiffType == 'VAV Directional Int.' && intAirflowPerDiff > 151) {
             $("#intA3").css("color", "red");
-        } else if (intDiffType == 'Horizontal' && intAirflowPerDiff > 91) { // 58: design max; 91 tested max;
+        } else if (intDiffType == 'Displacement' && intAirflowPerDiff > 91) { // 58: design max; 91 tested max;
             $("#intA3").css("color", "red");
         } else {
             $("#intA3").css("color", "green");
@@ -985,7 +985,7 @@ function main() {
     } else if (intDiffType == 'VAV Directional Int.') {
         intDiffAngle = 45;
         intDiffEffArea = 0.035;
-    } else if (intDiffType == 'Horizontal') {
+    } else if (intDiffType == 'Displacement') {
         intDiffAngle = 75;
         intDiffEffArea = 0.0226;
     }
@@ -1102,19 +1102,19 @@ var intDiff = [{
     text: "Swirl",
     value: 'Swirl',
     selected: false,
-    description: "Normally used in interior zone.",
+    description: "",
     imageSrc: "img/Diffuser_Swirl.JPG"
 }, {
     text: "VAV directional",
     value: 'VAV Directional Int.',
     selected: false,
-    description: "VAV Directional Diffuser for interior zone",
+    description: "",
     imageSrc: "img/Diffuser_Square.JPG"
 }, {
-    text: "Horizontal",
-    value: "Horizontal",
+    text: "Displacement",
+    value: "Displacement",
     selected: false,
-    description: "Normally used in an interior zone. Creates a stratified environment similar to a displacement ventilation system",
+    description: "Horizontal discharge diffuser",
     imageSrc: "img/Diffuser_Round.PNG"
 }];
 
