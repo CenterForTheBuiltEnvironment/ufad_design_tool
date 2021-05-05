@@ -59,6 +59,9 @@
         $(".dd-container").css("width", "160px");
         $(".dd-select").css("height", "20px");
         $(".dd-select").css("background", "none");
+        $(".dd-selected").css("padding", "0");
+        $(".dd-selected").css("padding-left", "5px");
+        $(".dd-selected").css("font-weight", "normal");
         $(".dd-container").css("height", "20px");
         $(".dd-option").css("width", "300px");
         $(".dd-options.dd-click-off-close").css("width", "300px");
@@ -67,7 +70,7 @@
         ).each(function () {
           $(this).css("text-align", "center");
           $(this).css("color", "black");
-          $(this).css("background-color", "#eff4fb");
+          $(this).css("background-color", "rgba(59, 189, 237, 0.3)");
           $(this).css("width", "80px");
         });
         $('#perDiffType input[class="dd-selected-value"]').attr(
@@ -90,38 +93,26 @@
         });
         setDefaults();
         main();
+        toggleUnits();
       });
     </script>
     <style type="text/css">
       a.button {
-        background: transparent url("img/bg_button.gif") no-repeat scroll top
-          right;
-        color: #444;
-        display: block;
-        float: left;
-        font: normal 12px arial, sans-serif;
-        height: 24px;
-        margin-right: 6px;
-        padding-right: 18px; /* sliding doors padding */
+        background-color: #0f75bcff;
+        border: none;
+        color: white;
+        padding: 10px 10px;
+        text-align: center;
         text-decoration: none;
-      }
-      a.button span {
-        background: transparent url("img/bg_button.gif") no-repeat;
-        display: block;
-        line-height: 14px;
-        padding: 5px 0 5px 18px;
-      }
-      a.button:active {
-        background-position: bottom right;
-        color: #000;
-        outline: none; /* hide dotted outline in Firefox */
-      }
-      a.button:active span {
-        background-position: bottom left;
-        padding: 6px 0 4px 18px; /* push text down 1px */
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 6px;
       }
       a.button:hover {
-        color: #4797e1;
+        background-color: #4797e1;
+        color: white;
       }
       td.header {
         text-align: center;
@@ -132,13 +123,13 @@
       td.unit {
         text-align: center;
         color: black;
-        background-color: #eff4fb;
+        background-color: rgba(59, 189, 237, 0.3);
         width: 80px;
       }
       td.symbol {
         text-align: center;
         color: black;
-        background-color: #eaeff7;
+        background-color: rgba(15, 117, 188, 0.3);
         width: 85px;
       }
       td.result {
@@ -154,21 +145,20 @@
       }
       body {
         background-color: white;
+        margin: 0;
         font: 100.01% "Trebuchet MS", Verdana, Arial, sans-serif;
       }
       h2 {
         font-family: Arial, Helvetica, san-serif;
         font-size: 200%;
         font-style: normal;
-        color: #2a4583;
-        padding-top: 50px;
-        text-align: left;
+        color: #0f75bcff;
       }
       h3 {
         font-family: Arial, Helvetica, san-serif;
         font-size: 150%;
         font-style: normal;
-        color: #2a4583;
+        color: #0f75bcff;
         margin: 0.2em 0 0.4em 0;
         text-align: center;
       }
@@ -178,14 +168,6 @@
       b {
         color: #456a94;
       }
-      div.rounded1 {
-        width: 1100px;
-        margin: 0 3%;
-        padding-bottom: 20px;
-        -moz-border-radius: 30px;
-        border-radius: 30px;
-        background-color: #c6cfe0;
-      }
       div.rounded2 {
         width: 900px;
         padding: 12px;
@@ -193,7 +175,7 @@
         border-style: solid;
         border-width: 2px;
         border-color: white;
-        background-color: white;
+        background-color: #f6f6f6;
       }
 
       div.footer {
@@ -221,635 +203,633 @@
         width: 160px;
         font: 100.01% "Trebuchet MS", Verdana, Arial, sans-serif;
       }
-      img {
-        align: center;
-        float: left;
-        margin-left: 82px;
-        margin-top: 30px;
-        margin-right: 30px;
-      }
     </style>
   </head>
   <body>
+    <div
+      style="
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        padding: 2rem;
+        background-color: #f6f6f6;
+        border-bottom: 1px solid darkgray;
+      "
+    >
+      <img alt="CBE logo" src="img/CBE-logo-2018.png" width="200" height="72" />
+      <h2 style="margin: 0; padding: 1rem;">
+        UFAD Cooling Load Design Tool
+      </h2>
+    </div>
     <center>
       <form id="input">
-        <div class="rounded1">
-          <table id="inputtable" cellpadding="3" cellspacing="20" class="form">
-            <tr>
-              <td colspan="2">
-                <div class="rounded2">
-                  <table
-                    width="900"
-                    align="center"
-                    cellpadding="3"
-                    cellspacing="2"
-                  >
-                    <tr>
-                      <img alt="CBE logo" src="img/cbeLogo150px.jpg" />
-                      <h2>UFAD Cooling Load Design Tool</h2>
-                    </tr>
-                    <tr>
-                      <td colspan="5"><h3>Input</h3></td>
-                    </tr>
-                    <tr>
-                      <td
-                        title="specify the underfloor plenum configuration, which has four types"
-                      >
-                        Plenum Configuration
-                      </td>
-                      <td align="center">
-                        <select name="plenumConfig" onChange="satInput();">
-                          <option></option>
-                          <option value="Series">Series</option>
-                          <option value="Reverse Series">Reverse Series</option>
-                          <option value="Independent Plenums"
-                            >Independent Plenums</option
-                          >
-                          <option value="Common Plenum">Common Plenum</option>
-                        </select>
-                      </td>
-                      <td></td>
-                      <td></td>
-                    </tr>
-                    <tr>
-                      <td></td>
-                      <td class="header">Interior</td>
-                      <td class="header">Perimeter</td>
-                      <td class="header">Unit</td>
-                      <td class="header">Symbol</td>
-                    </tr>
-                    <tr>
-                      <td>Room Height</td>
-                      <td align="right"><input name="intRoomHeight" /></td>
-                      <td align="right"><input name="perRoomHeight" /></td>
-                      <td class="lengthunit">ft</td>
-                      <td class="symbol">H</td>
-                    </tr>
-                    <tr>
-                      <td>Floor Area</td>
-                      <td align="right"><input name="intFloorArea" /></td>
-                      <td align="right"><input name="perFloorArea" /></td>
-                      <td class="areaunit">ft<sup>2</sup></td>
-                      <td class="symbol">A<sub>f</sub></td>
-                    </tr>
-                    <tr>
-                      <td>Floor Level</td>
-                      <td align="right">
-                        <select id="intFloorLevel">
-                          <option></option>
-                          <option value="Ground Floor">Ground Floor</option>
-                          <option value="Middle Floor">Middle Floor</option>
-                          <option value="Top Floor">Top Floor</option>
-                        </select>
-                      </td>
-                      <td align="right">
-                        <select name="perFloorLevel">
-                          <option></option>
-                          <option value="Ground Floor">Ground Floor</option>
-                          <option value="Middle Floor">Middle Floor</option>
-                          <option value="Top Floor">Top Floor</option>
-                        </select>
-                      </td>
-                      <td class="unit">-</td>
-                      <td class="symbol">-</td>
-                    </tr>
-                    <tr>
-                      <td>Diffuser Type</td>
-                      <td align="right">
-                        <div id="intDiffType"></div>
-                      </td>
-                      <td align="right">
-                        <div id="perDiffType"></div>
-                      </td>
-                      <td class="unit">-</td>
-                      <td class="symbol">-</td>
-                    </tr>
-                    <tr id="test" class="offstate-a">
-                      <td>Diffuser Length</td>
-                      <td align="right"><input disabled="disabled" /></td>
-                      <td align="right">
-                        <input name="barGrilleLength" onchange="test()" />
-                      </td>
-                      <td class="unit" id="DiffL">in</td>
-                      <td class="symbol">-</td>
-                    </tr>
-                    <tr id="test1" class="offstate-a">
-                      <td
-                        title="The cooling capacity of the in-floor cooling unit"
-                      >
-                        In-floor Cooling Unit Capacity
-                      </td>
-                      <td align="right"><input disabled="disabled" /></td>
-                      <td align="right">
-                        <input name="infloorCap" onchange="test()" />
-                      </td>
-                      <td class="loadunit" id="DiffL1">kBtu/hr</td>
-                      <td class="symbol">W<sub>unit</sub></td>
-                    </tr>
-                    <tr>
-                      <td>Number of Diffusers</td>
-                      <td align="right"><input name="intNumDiffs" /></td>
-                      <td align="right"><input name="perNumDiffs" /></td>
-                      <td class="unit">-</td>
-                      <td class="symbol">n</td>
-                    </tr>
-                    <tr>
-                      <td>Design Cooling load for Overhead System</td>
-                      <td align="right">
-                        <input name="intCoolingLoadMixed" />
-                      </td>
-                      <td align="right">
-                        <input name="perCoolingLoadMixed" />
-                      </td>
-                      <td class="loadunit">kBtu/hr</td>
-                      <td class="symbol">W<sub>OH</sub></td>
-                    </tr>
-                    <tr>
-                      <td>Design Average Temperature in the Occupied Zone</td>
-                      <td align="right"><input name="intOccupiedT" /></td>
-                      <td align="right"><input name="perOccupiedT" /></td>
-                      <td class="tempunit">&deg;F</td>
-                      <td class="symbol">T<sub>oz,avg,d</sub></td>
-                    </tr>
-                    <tr>
-                      <td
-                        title="Uncontrolled air leakage from the pressurized underfloor plenum (through gaps between panels, electrical floor outlets, etc.) that enters the room and can still contribute to the removal of the heat load. For well sealed raised floors (carpet, tape, etc.), a typical range is 0.05-0.1 cfm/ft2; for not well sealed raised floors, a typical value is ~ 0.25 cfm/ft2 or greater."
-                      >
-                        Estimated Category 2 Leakage
-                      </td>
-                      <td align="right"><input name="intLeakage" /></td>
-                      <td align="right"><input name="perLeakage" /></td>
-                      <td class="speedunit">cfm/ft<sup>2</sup></td>
-                      <td class="symbol">q<sub>leak,2</sub></td>
-                    </tr>
-                    <tr>
-                      <td>
-                        Setpoint Temperature of Air Entering the Supply Plenum
-                      </td>
-                      <td align="right"><input name="intSupplyPlenumT" /></td>
-                      <td align="right"><input name="perSupplyPlenumT" /></td>
-                      <td class="tempunit">&deg;F</td>
-                      <td class="symbol">T<sub>plenum</sub></td>
-                    </tr>
-                    <tr>
-                      <td>Number of Occupants</td>
-                      <td align="right"><input name="numOccupants" /></td>
-                      <td align="right"><input disabled="disabled" /></td>
-                      <td class="unit">-</td>
-                      <td class="symbol">m</td>
-                    </tr>
-                    <tr>
-                      <td>Window Blinds</td>
-                      <td align="right"><input disabled="disabled" /></td>
-                      <td align="right">
-                        <select name="blinds">
-                          <option></option>
-                          <option value="up">Up</option>
-                          <option value="down">Down</option>
-                        </select>
-                      </td>
-                      <td class="unit">-</td>
-                      <td class="symbol">-</td>
-                    </tr>
+        <table id="inputtable" cellpadding="3" cellspacing="20" class="form">
+          <tr>
+            <td colspan="2">
+              <div class="rounded2">
+                <table
+                  width="900"
+                  align="center"
+                  cellpadding="3"
+                  cellspacing="2"
+                >
+                  <tr>
+                    <td colspan="5"><h3>Input</h3></td>
+                  </tr>
+                  <tr>
+                    <td
+                      title="specify the underfloor plenum configuration, which has four types"
+                    >
+                      Plenum Configuration
+                    </td>
+                    <td align="center">
+                      <select name="plenumConfig" onChange="satInput();">
+                        <option></option>
+                        <option value="Series">Series</option>
+                        <option value="Reverse Series">Reverse Series</option>
+                        <option value="Independent Plenums"
+                          >Independent Plenums</option
+                        >
+                        <option value="Common Plenum">Common Plenum</option>
+                      </select>
+                    </td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td class="header">Interior</td>
+                    <td class="header">Perimeter</td>
+                    <td class="header">Unit</td>
+                    <td class="header">Symbol</td>
+                  </tr>
+                  <tr>
+                    <td>Room Height</td>
+                    <td align="right"><input name="intRoomHeight" /></td>
+                    <td align="right"><input name="perRoomHeight" /></td>
+                    <td class="lengthunit">ft</td>
+                    <td class="symbol">H</td>
+                  </tr>
+                  <tr>
+                    <td>Floor Area</td>
+                    <td align="right"><input name="intFloorArea" /></td>
+                    <td align="right"><input name="perFloorArea" /></td>
+                    <td class="areaunit">ft<sup>2</sup></td>
+                    <td class="symbol">A<sub>f</sub></td>
+                  </tr>
+                  <tr>
+                    <td>Floor Level</td>
+                    <td align="right">
+                      <select id="intFloorLevel">
+                        <option value="Ground Floor">Ground Floor</option>
+                        <option value="Middle Floor">Middle Floor</option>
+                        <option value="Top Floor">Top Floor</option>
+                      </select>
+                    </td>
+                    <td>
+                      <select name="perFloorLevel">
+                        <option value="Ground Floor">Ground Floor</option>
+                        <option value="Middle Floor">Middle Floor</option>
+                        <option value="Top Floor">Top Floor</option>
+                      </select>
+                    </td>
+                    <td class="unit">-</td>
+                    <td class="symbol">-</td>
+                  </tr>
+                  <tr>
+                    <td>Diffuser Type</td>
+                    <td>
+                      <div id="intDiffType" style="padding: 0;"></div>
+                    </td>
+                    <td>
+                      <div id="perDiffType"></div>
+                    </td>
+                    <td class="unit">-</td>
+                    <td class="symbol">-</td>
+                  </tr>
+                  <tr id="test" class="offstate-a">
+                    <td>Diffuser Length</td>
+                    <td align="right"><input disabled="disabled" /></td>
+                    <td align="right">
+                      <input name="barGrilleLength" onchange="test()" />
+                    </td>
+                    <td class="unit" id="DiffL">in</td>
+                    <td class="symbol">-</td>
+                  </tr>
+                  <tr id="test1" class="offstate-a">
+                    <td
+                      title="The cooling capacity of the in-floor cooling unit"
+                    >
+                      In-floor Cooling Unit Capacity
+                    </td>
+                    <td align="right"><input disabled="disabled" /></td>
+                    <td align="right">
+                      <input name="infloorCap" onchange="test()" />
+                    </td>
+                    <td class="loadunit" id="DiffL1">kBtu/hr</td>
+                    <td class="symbol">W<sub>unit</sub></td>
+                  </tr>
+                  <tr>
+                    <td>Number of Diffusers</td>
+                    <td align="right"><input name="intNumDiffs" /></td>
+                    <td align="right"><input name="perNumDiffs" /></td>
+                    <td class="unit">-</td>
+                    <td class="symbol">n</td>
+                  </tr>
+                  <tr>
+                    <td>Design Cooling load for Overhead System</td>
+                    <td align="right">
+                      <input name="intCoolingLoadMixed" />
+                    </td>
+                    <td align="right">
+                      <input name="perCoolingLoadMixed" />
+                    </td>
+                    <td class="loadunit">kBtu/hr</td>
+                    <td class="symbol">W<sub>OH</sub></td>
+                  </tr>
+                  <tr>
+                    <td>Design Average Temperature in the Occupied Zone</td>
+                    <td align="right"><input name="intOccupiedT" /></td>
+                    <td align="right"><input name="perOccupiedT" /></td>
+                    <td class="tempunit">&deg;F</td>
+                    <td class="symbol">T<sub>oz,avg,d</sub></td>
+                  </tr>
+                  <tr>
+                    <td
+                      title="Uncontrolled air leakage from the pressurized underfloor plenum (through gaps between panels, electrical floor outlets, etc.) that enters the room and can still contribute to the removal of the heat load. For well sealed raised floors (carpet, tape, etc.), a typical range is 0.05-0.1 cfm/ft2; for not well sealed raised floors, a typical value is ~ 0.25 cfm/ft2 or greater."
+                    >
+                      Estimated Category 2 Leakage
+                    </td>
+                    <td align="right"><input name="intLeakage" /></td>
+                    <td align="right"><input name="perLeakage" /></td>
+                    <td class="speedunit">cfm/ft<sup>2</sup></td>
+                    <td class="symbol">q<sub>leak,2</sub></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Setpoint Temperature of Air Entering the Supply Plenum
+                    </td>
+                    <td align="right"><input name="intSupplyPlenumT" /></td>
+                    <td align="right"><input name="perSupplyPlenumT" /></td>
+                    <td class="tempunit">&deg;F</td>
+                    <td class="symbol">T<sub>plenum</sub></td>
+                  </tr>
+                  <tr>
+                    <td>Number of Occupants</td>
+                    <td align="right"><input name="numOccupants" /></td>
+                    <td align="right"><input disabled="disabled" /></td>
+                    <td class="unit">-</td>
+                    <td class="symbol">m</td>
+                  </tr>
+                  <tr>
+                    <td>Window Blinds</td>
+                    <td align="right"><input disabled="disabled" /></td>
+                    <td align="right">
+                      <select name="blinds">
+                        <option></option>
+                        <option value="up">Up</option>
+                        <option value="down">Down</option>
+                      </select>
+                    </td>
+                    <td class="unit">-</td>
+                    <td class="symbol">-</td>
+                  </tr>
 
+                  <tr>
+                    <td>Zone Orientation</td>
+                    <td align="right"><input disabled="disabled" /></td>
+                    <td align="right">
+                      <select name="zoneOrientation">
+                        <option></option>
+                        <option value="North">North</option>
+                        <option value="South">South</option>
+                        <option value="East">East</option>
+                        <option value="West">West</option>
+                      </select>
+                    </td>
+                    <td class="unit">-</td>
+                    <td class="symbol">-</td>
+                  </tr>
+                  <tr>
+                    <td>Exterior Wall Length</td>
+                    <td align="right"><input disabled="disabled" /></td>
+                    <td align="right"><input name="extWallLength" /></td>
+                    <td class="lengthunit">ft</td>
+                    <td class="symbol">L<sup>p</sup></td>
+                  </tr>
+                </table>
+                <center>
+                  <table>
                     <tr>
-                      <td>Zone Orientation</td>
-                      <td align="right"><input disabled="disabled" /></td>
-                      <td align="right">
-                        <select name="zoneOrientation">
-                          <option></option>
-                          <option value="North">North</option>
-                          <option value="South">South</option>
-                          <option value="East">East</option>
-                          <option value="West">West</option>
-                        </select>
-                      </td>
-                      <td class="unit">-</td>
-                      <td class="symbol">-</td>
-                    </tr>
-                    <tr>
-                      <td>Exterior Wall Length</td>
-                      <td align="right"><input disabled="disabled" /></td>
-                      <td align="right"><input name="extWallLength" /></td>
-                      <td class="lengthunit">ft</td>
-                      <td class="symbol">L<sup>p</sup></td>
-                    </tr>
-                  </table>
-                  <center>
-                    <table>
-                      <tr>
-                        <!--
+                      <!--
               <td colspan=2 align="right"><a class="button" onclick="setDefaults(); return false;"><span style="cursor:pointer;">&nbsp;&nbsp;&nbsp;Set Defaults&nbsp;&nbsp;&nbsp;</span></a>
               <td><a class="button" onclick="document.forms['input'].reset();"><span style="cursor:pointer;">&nbsp;&nbsp;&nbsp;Reset&nbsp;&nbsp;&nbsp;</span></a></td>
               !-->
-                        <td>
-                          <a class="button" onclick="main(); return false;"
-                            ><span style="cursor: pointer;"
-                              >&nbsp;&nbsp;&nbsp;Submit&nbsp;&nbsp;&nbsp;</span
-                            ></a
-                          >
-                        </td>
-                        <td>
-                          <a
-                            class="button"
-                            onclick="toggleUnits(); return false;"
-                            ><span style="cursor: pointer;"
-                              >&nbsp;&nbsp;IP/SI&nbsp;</span
-                            ></a
-                          >
-                        </td>
-                        <td>
-                          <a
-                            class="button"
-                            href="https://docs.google.com/document/d/1B3UTBGapU68YxXAXbqo4L_6VwDJLnTb7B1Q1ptJrEYA/edit?usp=sharing"
-                            target="_blank"
-                            ><span style="cursor: pointer;"
-                              >&nbsp;&nbsp;Help&nbsp;</span
-                            ></a
-                          >
-                        </td>
-                      </tr>
-                    </table>
-                  </center>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="2">
-                <div class="rounded2">
-                  <table
-                    id="output"
-                    width="900"
-                    align="center"
-                    cellpadding="3"
-                    cellspacing="2"
-                  >
-                    <tr>
-                      <td colspan="5">
-                        <h3>Results</h3>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td></td>
-                      <td class="header">Interior</td>
-                      <td class="header">Perimeter</td>
-                      <td class="header">Unit</td>
-                      <td class="header">Symbol</td>
-                    </tr>
-                    <tr>
-                      <td>Airflow (through diffusers)</td>
-                      <td class="result">
-                        <span class="airflowresult" id="intAirflowRateOut"
-                          >-</span
-                        >
-                      </td>
-                      <td class="result">
-                        <span class="airflowresult" id="perAirflowRateOut"
-                          >-</span
-                        >
-                      </td>
-                      <td class="airflowunit">cfm</td>
-                      <td class="symbol">Q</td>
-                    </tr>
-
-                    <tr>
-                      <td>Airflow (through diffusers & leakage)</td>
-                      <td class="result">
-                        <span class="airflowresult" id="intDesAirflowRate"
-                          >-</span
-                        >
-                      </td>
-                      <td class="result">
-                        <span class="airflowresult" id="perDesAirflowRate"
-                          >-</span
-                        >
-                      </td>
-                      <td class="airflowunit">cfm</td>
-                      <td class="symbol">Q<sub>room</sub></td>
-                    </tr>
-                    <tr>
-                      <td>Air Distribution Effectiveness</td>
-                      <td
-                        title="The value is only valid for the interior zone swirl diffusers when airflow rate per diffuser is around its design value"
-                        class="result"
-                      >
-                        <span id="intdisteff">-</span>
-                      </td>
-                      <td
-                        title="Note that the empiracal equation to calculate Ez is not applicable to the perimeter zone"
-                        class="result"
-                      >
-                        <span id="perdisteff">-</span>
-                      </td>
-                      <td class="unit">-</td>
-                      <td class="symbol">E<sub>z</sub></td>
-                    </tr>
-                    <tr>
-                      <td>Diffuser Discharge Temperature</td>
-                      <td class="result">
-                        <span class="tempresult" id="intDiffT">-</span>
-                      </td>
-                      <td class="result">
-                        <span class="tempresult" id="perDiffT">-</span>
-                      </td>
-                      <td class="tempunit">&deg;F</td>
-                      <td class="symbol">T<sub>S</sub></td>
-                    </tr>
-                    <tr>
-                      <td>Air Temperature at 4 in. Height</td>
-                      <td class="result">
-                        <span class="tempresult" id="int4inT">-</span>
-                      </td>
-                      <td class="result">
-                        <span class="tempresult" id="per4inT">-</span>
-                      </td>
-                      <td class="tempunit">&deg;F</td>
-                      <td class="symbol">T<sub>4</sub></td>
-                    </tr>
-                    <tr>
-                      <td>Setpoint Thermostat Air Temperature (at 48 in.)</td>
-                      <td class="result">
-                        <span class="tempresult" id="intSetpointT">-</span>
-                      </td>
-                      <td class="result">
-                        <span class="tempresult" id="perSetpointT">-</span>
-                      </td>
-                      <td class="tempunit">&deg;F</td>
-                      <td class="symbol">T<sub>set</sub></td>
-                    </tr>
-                    <tr>
-                      <td>Air Temperature at 67 in. Height</td>
-                      <td class="result">
-                        <span class="tempresult" id="int67inT">-</span>
-                      </td>
-                      <td class="result">
-                        <span class="tempresult" id="per67inT">-</span>
-                      </td>
-                      <td class="tempunit">&deg;F</td>
-                      <td class="symbol">T<sub>67</sub></td>
-                    </tr>
-                    <tr>
-                      <td>Return Air Temperature</td>
-                      <td class="result">
-                        <span class="tempresult" id="intReturnT">-</span>
-                      </td>
-                      <td class="result">
-                        <span class="tempresult" id="perReturnT">-</span>
-                      </td>
-                      <td class="tempunit">&deg;F</td>
-                      <td class="symbol">T<sub>R</sub></td>
-                    </tr>
-                    <tr>
-                      <td>Return Plenum Air Temperature</td>
-                      <td class="result">
-                        <span class="tempresult" id="intReturnPlenumT">-</span>
-                      </td>
-                      <td class="result">
-                        <span class="tempresult" id="perReturnPlenumT">-</span>
-                      </td>
-                      <td class="tempunit">&deg;F</td>
-                      <td class="symbol">T<sub>RP</sub></td>
-                    </tr>
-                    <tr>
-                      <td>Average Temperature in the OZ</td>
-                      <td class="result">
-                        <span class="tempresult" id="intAvgOZT">-</span>
-                      </td>
-                      <td class="result">
-                        <span class="tempresult" id="perAvgOZT">-</span>
-                      </td>
-                      <td class="tempunit">&deg;F</td>
-                      <td class="symbol">T<sub>oz,avg</sub></td>
-                    </tr>
-                    <tr>
                       <td>
-                        Temperature difference between the head (67in) and ankle
-                        (4in)
+                        <a class="button" onclick="main(); return false;"
+                          ><span style="cursor: pointer;"
+                            >&nbsp;&nbsp;&nbsp;Submit&nbsp;&nbsp;&nbsp;</span
+                          ></a
+                        >
                       </td>
-                      <td class="result">
-                        <span class="dtempresult" id="intA1">-</span>
-                      </td>
-                      <td class="result">
-                        <span class="dtempresult" id="perA1">-</span>
-                      </td>
-                      <td class="tempunit">&deg;F</td>
-                      <td class="symbol">&Delta;T<sub>oz</sub></td>
-                    </tr>
-                    <tr>
-                      <td>Airflow per area (through diffusers)</td>
-                      <td class="result">
-                        <span class="speedresult" id="intA2">-</span>
-                      </td>
-                      <td class="result">
-                        <span class="speedresult" id="perA2">-</span>
-                      </td>
-                      <td class="speedunit">cfm/ft<sup>2</sup></td>
-                      <td class="symbol">Q</td>
-                    </tr>
-                    <tr>
-                      <td>Airflow per diffuser</td>
-                      <td class="result">
-                        <span class="airflowresult" id="intA3">-</span>
-                      </td>
-                      <td class="result">
-                        <span class="airflowresult" id="perA3">-</span>
-                      </td>
-                      <td class="airflowPunit">cfm/diff.</td>
-                      <td class="symbol">Q</td>
-                    </tr>
-                    <tr>
                       <td>
-                        Design airflow per area (through diffusers & leakage)
+                        <a class="button" onclick="toggleUnits(); return false;"
+                          ><span style="cursor: pointer;"
+                            >&nbsp;&nbsp;IP/SI&nbsp;</span
+                          ></a
+                        >
                       </td>
-                      <td class="result">
-                        <span class="speedresult" id="intA4">-</span>
-                      </td>
-                      <td class="result">
-                        <span class="speedresult" id="perA4">-</span>
-                      </td>
-                      <td class="speedunit">cfm/ft<sup>2</sup></td>
-                      <td class="symbol">Q<sub>room</sub></td>
-                    </tr>
-                    <tr>
                       <td>
-                        Design Cooling Load Calculated for a Overhead (mixing)
-                        System
+                        <a
+                          class="button"
+                          href="https://docs.google.com/document/d/1B3UTBGapU68YxXAXbqo4L_6VwDJLnTb7B1Q1ptJrEYA/edit?usp=sharing"
+                          target="_blank"
+                          ><span style="cursor: pointer;"
+                            >&nbsp;&nbsp;Help&nbsp;</span
+                          ></a
+                        >
                       </td>
-                      <td class="result">
-                        <span id="intCoolingLoadMixedW">-</span>
-                      </td>
-                      <td class="result">
-                        <span id="perCoolingLoadMixedW">-</span>
-                      </td>
-                      <td class="unit">W</td>
-                      <td class="symbol">W<sub>OH</sub></td>
-                    </tr>
-                    <tr>
-                      <td
-                        title="The UFAD Cooling Load Ratio (UCLR) is the ratio of the cooling load calculated for UFAD to the cooling load calculated for a well mixed system (e.g. Overhead or mixing ventilation)."
-                      >
-                        UFAD Cooling Load Ratio (UCLR)
-                      </td>
-                      <td class="result"><span id="intUCLR">-</span></td>
-                      <td class="result"><span id="perUCLR">-</span></td>
-                      <td class="unit">-</td>
-                      <td class="symbol">UCLR</td>
-                    </tr>
-                    <tr>
-                      <td
-                        title="The Supply Plenum Fraction (SPF) is the ratio of the cooling load removed in the supply plenum to the total UFAD cooling load."
-                      >
-                        Supply Plenum Fraction (SPF)
-                      </td>
-                      <td class="result"><span id="intSPF">-</span></td>
-                      <td class="result"><span id="perSPF">-</span></td>
-                      <td class="unit">-</td>
-                      <td class="symbol">SPF</td>
-                    </tr>
-                    <tr>
-                      <td
-                        title="The Zone Fraction (ZF) is the ratio of the cooling load removed in the zone (room) to the total UFAD cooling load."
-                      >
-                        Zone Fraction (ZF)
-                      </td>
-                      <td class="result"><span id="intZF">-</span></td>
-                      <td class="result"><span id="perZF">-</span></td>
-                      <td class="unit">-</td>
-                      <td class="symbol">ZF</td>
-                    </tr>
-                    <tr>
-                      <td
-                        title="The Return Plenum Fraction (RPF) is the ratio of the cooling load removed in the return plenum to the total UFAD cooling load."
-                      >
-                        Return Plenum Fraction (RPF)
-                      </td>
-                      <td class="result"><span id="intRPF">-</span></td>
-                      <td class="result"><span id="perRPF">-</span></td>
-                      <td class="unit">-</td>
-                      <td class="symbol">RPF</td>
-                    </tr>
-                    <tr>
-                      <td>UFAD Cooling Load</td>
-                      <td class="result">
-                        <span id="intCoolingLoadUFADW">-</span>
-                      </td>
-                      <td class="result">
-                        <span id="perCoolingLoadUFADW">-</span>
-                      </td>
-                      <td class="unit">W</td>
-                      <td class="symbol">W</td>
-                    </tr>
-                    <tr>
-                      <td>UFAD Cooling Load per Area</td>
-                      <td class="result">
-                        <span class="loaddensityresult" id="intA5">-</span>
-                      </td>
-                      <td class="result">
-                        <span class="loaddensityresult" id="perA5">-</span>
-                      </td>
-                      <td class="loaddensityunit">W/ft<sup>2</sup></td>
-                      <td class="symbol">W</td>
-                    </tr>
-                    <tr>
-                      <td>Supply Plenum Cooling Load</td>
-                      <td class="result">
-                        <span id="intSPCoolingLoad">-</span>
-                      </td>
-                      <td class="result">
-                        <span id="perSPCoolingLoad">-</span>
-                      </td>
-                      <td class="unit">W</td>
-                      <td class="symbol">-</td>
-                    </tr>
-                    <tr>
-                      <td>Supply Plenum Cooling Load per Area</td>
-                      <td class="result">
-                        <span class="loaddensityresult" id="intA6">-</span>
-                      </td>
-                      <td class="result">
-                        <span class="loaddensityresult" id="perA6">-</span>
-                      </td>
-                      <td class="loaddensityunit">W/ft<sup>2</sup></td>
-                      <td class="symbol">-</td>
-                    </tr>
-                    <tr>
-                      <td>Zone Cooling Load</td>
-                      <td class="result">
-                        <span id="intZCoolingLoad">-</span>
-                      </td>
-                      <td class="result">
-                        <span id="perZCoolingLoad">-</span>
-                      </td>
-                      <td class="unit">W</td>
-                      <td class="symbol">-</td>
-                    </tr>
-                    <tr>
-                      <td>Zone Cooling Load per Area</td>
-                      <td class="result">
-                        <span class="loaddensityresult" id="intA7">-</span>
-                      </td>
-                      <td class="result">
-                        <span class="loaddensityresult" id="perA7">-</span>
-                      </td>
-                      <td class="loaddensityunit">W/ft<sup>2</sup></td>
-                      <td class="symbol">-</td>
-                    </tr>
-                    <tr>
-                      <td>Return Plenum Cooling Load</td>
-                      <td class="result">
-                        <span id="intRPCoolingLoad">-</span>
-                      </td>
-                      <td class="result">
-                        <span id="perRPCoolingLoad">-</span>
-                      </td>
-                      <td class="unit">W</td>
-                      <td class="symbol">-</td>
-                    </tr>
-                    <tr>
-                      <td>Return Plenum Cooling Load per Area</td>
-                      <td class="result">
-                        <span class="loaddensityresult" id="intA8">-</span>
-                      </td>
-                      <td class="result">
-                        <span class="loaddensityresult" id="perA8">-</span>
-                      </td>
-                      <td class="loaddensityunit">W/ft<sup>2</sup></td>
-                      <td class="symbol">-</td>
                     </tr>
                   </table>
-                    <table>
-                      <tr>
-                        <td>
-                          <a class="button" onclick="$('#output').table2CSV()"
-                            ><span style="cursor: pointer;"
-                              >&nbsp;&nbsp;&nbsp;Export as
-                              CSV&nbsp;&nbsp;&nbsp;</span
-                            ></a
-                          >
-                        </td>
-                      </tr>
-                    </table>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td style="background-color: white;">
-                <div id="draw_chart1">
-                  <script>
-                    var svg1 = dimple.newSvg("#draw_chart1", 460, 480);
-                  </script>
-                </div>
-              </td>
-              <td style="background-color: white;">
-                <div id="draw_chart2">
-                  <script>
-                    var svg2 = dimple.newSvg("#draw_chart2", 460, 480);
-                  </script>
-                </div>
-              </td>
-            </tr>
-          </table>
-        </div>
+                </center>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <div class="rounded2">
+                <table
+                  id="output"
+                  width="900"
+                  align="center"
+                  cellpadding="3"
+                  cellspacing="2"
+                >
+                  <tr>
+                    <td colspan="5">
+                      <h3>Results</h3>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td class="header">Interior</td>
+                    <td class="header">Perimeter</td>
+                    <td class="header">Unit</td>
+                    <td class="header">Symbol</td>
+                  </tr>
+                  <tr>
+                    <td>Airflow (through diffusers)</td>
+                    <td class="result">
+                      <span class="airflowresult" id="intAirflowRateOut"
+                        >-</span
+                      >
+                    </td>
+                    <td class="result">
+                      <span class="airflowresult" id="perAirflowRateOut"
+                        >-</span
+                      >
+                    </td>
+                    <td class="airflowunit">cfm</td>
+                    <td class="symbol">Q</td>
+                  </tr>
+
+                  <tr>
+                    <td>Airflow (through diffusers & leakage)</td>
+                    <td class="result">
+                      <span class="airflowresult" id="intDesAirflowRate"
+                        >-</span
+                      >
+                    </td>
+                    <td class="result">
+                      <span class="airflowresult" id="perDesAirflowRate"
+                        >-</span
+                      >
+                    </td>
+                    <td class="airflowunit">cfm</td>
+                    <td class="symbol">Q<sub>room</sub></td>
+                  </tr>
+                  <tr>
+                    <td>Air Distribution Effectiveness</td>
+                    <td
+                      title="The value is only valid for the interior zone swirl diffusers when airflow rate per diffuser is around its design value"
+                      class="result"
+                    >
+                      <span id="intdisteff">-</span>
+                    </td>
+                    <td
+                      title="Note that the empiracal equation to calculate Ez is not applicable to the perimeter zone"
+                      class="result"
+                    >
+                      <span id="perdisteff">-</span>
+                    </td>
+                    <td class="unit">-</td>
+                    <td class="symbol">E<sub>z</sub></td>
+                  </tr>
+                  <tr>
+                    <td>Diffuser Discharge Temperature</td>
+                    <td class="result">
+                      <span class="tempresult" id="intDiffT">-</span>
+                    </td>
+                    <td class="result">
+                      <span class="tempresult" id="perDiffT">-</span>
+                    </td>
+                    <td class="tempunit">&deg;F</td>
+                    <td class="symbol">T<sub>S</sub></td>
+                  </tr>
+                  <tr>
+                    <td>Air Temperature at 4 in. Height</td>
+                    <td class="result">
+                      <span class="tempresult" id="int4inT">-</span>
+                    </td>
+                    <td class="result">
+                      <span class="tempresult" id="per4inT">-</span>
+                    </td>
+                    <td class="tempunit">&deg;F</td>
+                    <td class="symbol">T<sub>4</sub></td>
+                  </tr>
+                  <tr>
+                    <td>Setpoint Thermostat Air Temperature (at 48 in.)</td>
+                    <td class="result">
+                      <span class="tempresult" id="intSetpointT">-</span>
+                    </td>
+                    <td class="result">
+                      <span class="tempresult" id="perSetpointT">-</span>
+                    </td>
+                    <td class="tempunit">&deg;F</td>
+                    <td class="symbol">T<sub>set</sub></td>
+                  </tr>
+                  <tr>
+                    <td>Air Temperature at 67 in. Height</td>
+                    <td class="result">
+                      <span class="tempresult" id="int67inT">-</span>
+                    </td>
+                    <td class="result">
+                      <span class="tempresult" id="per67inT">-</span>
+                    </td>
+                    <td class="tempunit">&deg;F</td>
+                    <td class="symbol">T<sub>67</sub></td>
+                  </tr>
+                  <tr>
+                    <td>Return Air Temperature</td>
+                    <td class="result">
+                      <span class="tempresult" id="intReturnT">-</span>
+                    </td>
+                    <td class="result">
+                      <span class="tempresult" id="perReturnT">-</span>
+                    </td>
+                    <td class="tempunit">&deg;F</td>
+                    <td class="symbol">T<sub>R</sub></td>
+                  </tr>
+                  <tr>
+                    <td>Return Plenum Air Temperature</td>
+                    <td class="result">
+                      <span class="tempresult" id="intReturnPlenumT">-</span>
+                    </td>
+                    <td class="result">
+                      <span class="tempresult" id="perReturnPlenumT">-</span>
+                    </td>
+                    <td class="tempunit">&deg;F</td>
+                    <td class="symbol">T<sub>RP</sub></td>
+                  </tr>
+                  <tr>
+                    <td>Average Temperature in the OZ</td>
+                    <td class="result">
+                      <span class="tempresult" id="intAvgOZT">-</span>
+                    </td>
+                    <td class="result">
+                      <span class="tempresult" id="perAvgOZT">-</span>
+                    </td>
+                    <td class="tempunit">&deg;F</td>
+                    <td class="symbol">T<sub>oz,avg</sub></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Temperature difference between the head (67in) and ankle
+                      (4in)
+                    </td>
+                    <td class="result">
+                      <span class="dtempresult" id="intA1">-</span>
+                    </td>
+                    <td class="result">
+                      <span class="dtempresult" id="perA1">-</span>
+                    </td>
+                    <td class="tempunit">&deg;F</td>
+                    <td class="symbol">&Delta;T<sub>oz</sub></td>
+                  </tr>
+                  <tr>
+                    <td>Airflow per area (through diffusers)</td>
+                    <td class="result">
+                      <span class="speedresult" id="intA2">-</span>
+                    </td>
+                    <td class="result">
+                      <span class="speedresult" id="perA2">-</span>
+                    </td>
+                    <td class="speedunit">cfm/ft<sup>2</sup></td>
+                    <td class="symbol">Q</td>
+                  </tr>
+                  <tr>
+                    <td>Airflow per diffuser</td>
+                    <td class="result">
+                      <span class="airflowresult" id="intA3">-</span>
+                    </td>
+                    <td class="result">
+                      <span class="airflowresult" id="perA3">-</span>
+                    </td>
+                    <td class="airflowPunit">cfm/diff.</td>
+                    <td class="symbol">Q</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Design airflow per area (through diffusers & leakage)
+                    </td>
+                    <td class="result">
+                      <span class="speedresult" id="intA4">-</span>
+                    </td>
+                    <td class="result">
+                      <span class="speedresult" id="perA4">-</span>
+                    </td>
+                    <td class="speedunit">cfm/ft<sup>2</sup></td>
+                    <td class="symbol">Q<sub>room</sub></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Design Cooling Load Calculated for a Overhead (mixing)
+                      System
+                    </td>
+                    <td class="result">
+                      <span id="intCoolingLoadMixedW">-</span>
+                    </td>
+                    <td class="result">
+                      <span id="perCoolingLoadMixedW">-</span>
+                    </td>
+                    <td class="unit">W</td>
+                    <td class="symbol">W<sub>OH</sub></td>
+                  </tr>
+                  <tr>
+                    <td
+                      title="The UFAD Cooling Load Ratio (UCLR) is the ratio of the cooling load calculated for UFAD to the cooling load calculated for a well mixed system (e.g. Overhead or mixing ventilation)."
+                    >
+                      UFAD Cooling Load Ratio (UCLR)
+                    </td>
+                    <td class="result"><span id="intUCLR">-</span></td>
+                    <td class="result"><span id="perUCLR">-</span></td>
+                    <td class="unit">-</td>
+                    <td class="symbol">UCLR</td>
+                  </tr>
+                  <tr>
+                    <td
+                      title="The Supply Plenum Fraction (SPF) is the ratio of the cooling load removed in the supply plenum to the total UFAD cooling load."
+                    >
+                      Supply Plenum Fraction (SPF)
+                    </td>
+                    <td class="result"><span id="intSPF">-</span></td>
+                    <td class="result"><span id="perSPF">-</span></td>
+                    <td class="unit">-</td>
+                    <td class="symbol">SPF</td>
+                  </tr>
+                  <tr>
+                    <td
+                      title="The Zone Fraction (ZF) is the ratio of the cooling load removed in the zone (room) to the total UFAD cooling load."
+                    >
+                      Zone Fraction (ZF)
+                    </td>
+                    <td class="result"><span id="intZF">-</span></td>
+                    <td class="result"><span id="perZF">-</span></td>
+                    <td class="unit">-</td>
+                    <td class="symbol">ZF</td>
+                  </tr>
+                  <tr>
+                    <td
+                      title="The Return Plenum Fraction (RPF) is the ratio of the cooling load removed in the return plenum to the total UFAD cooling load."
+                    >
+                      Return Plenum Fraction (RPF)
+                    </td>
+                    <td class="result"><span id="intRPF">-</span></td>
+                    <td class="result"><span id="perRPF">-</span></td>
+                    <td class="unit">-</td>
+                    <td class="symbol">RPF</td>
+                  </tr>
+                  <tr>
+                    <td>UFAD Cooling Load</td>
+                    <td class="result">
+                      <span id="intCoolingLoadUFADW">-</span>
+                    </td>
+                    <td class="result">
+                      <span id="perCoolingLoadUFADW">-</span>
+                    </td>
+                    <td class="unit">W</td>
+                    <td class="symbol">W</td>
+                  </tr>
+                  <tr>
+                    <td>UFAD Cooling Load per Area</td>
+                    <td class="result">
+                      <span class="loaddensityresult" id="intA5">-</span>
+                    </td>
+                    <td class="result">
+                      <span class="loaddensityresult" id="perA5">-</span>
+                    </td>
+                    <td class="loaddensityunit">W/ft<sup>2</sup></td>
+                    <td class="symbol">W</td>
+                  </tr>
+                  <tr>
+                    <td>Supply Plenum Cooling Load</td>
+                    <td class="result">
+                      <span id="intSPCoolingLoad">-</span>
+                    </td>
+                    <td class="result">
+                      <span id="perSPCoolingLoad">-</span>
+                    </td>
+                    <td class="unit">W</td>
+                    <td class="symbol">-</td>
+                  </tr>
+                  <tr>
+                    <td>Supply Plenum Cooling Load per Area</td>
+                    <td class="result">
+                      <span class="loaddensityresult" id="intA6">-</span>
+                    </td>
+                    <td class="result">
+                      <span class="loaddensityresult" id="perA6">-</span>
+                    </td>
+                    <td class="loaddensityunit">W/ft<sup>2</sup></td>
+                    <td class="symbol">-</td>
+                  </tr>
+                  <tr>
+                    <td>Zone Cooling Load</td>
+                    <td class="result">
+                      <span id="intZCoolingLoad">-</span>
+                    </td>
+                    <td class="result">
+                      <span id="perZCoolingLoad">-</span>
+                    </td>
+                    <td class="unit">W</td>
+                    <td class="symbol">-</td>
+                  </tr>
+                  <tr>
+                    <td>Zone Cooling Load per Area</td>
+                    <td class="result">
+                      <span class="loaddensityresult" id="intA7">-</span>
+                    </td>
+                    <td class="result">
+                      <span class="loaddensityresult" id="perA7">-</span>
+                    </td>
+                    <td class="loaddensityunit">W/ft<sup>2</sup></td>
+                    <td class="symbol">-</td>
+                  </tr>
+                  <tr>
+                    <td>Return Plenum Cooling Load</td>
+                    <td class="result">
+                      <span id="intRPCoolingLoad">-</span>
+                    </td>
+                    <td class="result">
+                      <span id="perRPCoolingLoad">-</span>
+                    </td>
+                    <td class="unit">W</td>
+                    <td class="symbol">-</td>
+                  </tr>
+                  <tr>
+                    <td>Return Plenum Cooling Load per Area</td>
+                    <td class="result">
+                      <span class="loaddensityresult" id="intA8">-</span>
+                    </td>
+                    <td class="result">
+                      <span class="loaddensityresult" id="perA8">-</span>
+                    </td>
+                    <td class="loaddensityunit">W/ft<sup>2</sup></td>
+                    <td class="symbol">-</td>
+                  </tr>
+                </table>
+                <table>
+                  <tr>
+                    <td>
+                      <a class="button" onclick="$('#output').table2CSV()"
+                        ><span style="cursor: pointer;"
+                          >&nbsp;&nbsp;&nbsp;Export as
+                          CSV&nbsp;&nbsp;&nbsp;</span
+                        ></a
+                      >
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color: white;">
+              <div id="draw_chart1">
+                <script>
+                  var svg1 = dimple.newSvg("#draw_chart1", 460, 480);
+                </script>
+              </div>
+            </td>
+            <td style="background-color: white;">
+              <div id="draw_chart2">
+                <script>
+                  var svg2 = dimple.newSvg("#draw_chart2", 460, 480);
+                </script>
+              </div>
+            </td>
+          </tr>
+        </table>
       </form>
       <div class="footer">
         Created for Opera, Firefox, and Chrome (Internet Explorer not
