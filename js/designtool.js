@@ -16,7 +16,7 @@ function satInput() {
 }
 
 function setDefaults() {
-  var input = document.forms["input"];
+  const input = document.forms["input"];
   input.plenumConfig.value = "Series";
   input.intRoomHeight.value = 9;
   input.intFloorArea.value = 3500;
@@ -770,9 +770,9 @@ function draw_charts() {
   var svg1 = dimple.newSvg("#draw_chart1", 480, 500);
   var myChart1 = new dimple.chart(svg1, indata);
   myChart1.setBounds(60, 30, 400, 430);
-  var x1 = myChart1.addMeasureAxis("x", "Temperature");
+  const x1 = myChart1.addMeasureAxis("x", "Temperature");
   x1.title = "Temperature (°F)";
-  var y1 = myChart1.addMeasureAxis("y", "Height");
+  const y1 = myChart1.addMeasureAxis("y", "Height");
   y1.title = "Height (.in)";
   myChart1.addColorAxis("Temperature", ["blue", "yellow", "red"]);
   //myChart1.addColorAxis("Point","grey")
@@ -943,10 +943,6 @@ function draw_charts1() {
 }
 
 function main() {
-  var _SI = SI;
-  if (_SI) {
-    toggleUnits();
-  }
   var input = document.forms["input"];
   var perdisteff;
   plenumConfig = input.plenumConfig.value;
@@ -1183,19 +1179,19 @@ function main() {
   perDistEff();
 
   if (perPhi4 > 1.05 || perPhi67 > 1.05) {
-    if (_SI) toggleUnits();
+    if (SI) toggleUnits();
     x = confirm(
       "The design conditions that you have entered into the tool may result in reverse stratification in the perimeter zone. This means that the linear bar grilles will blow cooler air up to the ceiling and could have a negative energy and indoor air quality impact. To avoid this situation, we suggest to increase the number of diffusers and/or if possible, reduce the perimeter zone cooling load.\n\nTo run the design tool calculations with your original input parameters, click <OK>\nTo cancel the calculations and return to the input screen, click <Cancel>"
     );
     if (x === true) {
-      if (_SI) toggleUnits();
+      if (SI) toggleUnits();
       handle_output();
-      if (_SI) toggleUnits();
+      if (SI) toggleUnits();
       draw_charts1();
     }
   } else {
     handle_output();
-    if (_SI) toggleUnits();
+    if (SI) toggleUnits();
     draw_charts1();
   }
 }
