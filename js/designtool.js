@@ -1,4 +1,19 @@
-var SI = false;
+let SI = false;
+
+function satInput() {
+  var input = document.forms["input"];
+  plenumConfig = input.plenumConfig.value;
+  if (plenumConfig == "Series" || plenumConfig == "Common Plenum") {
+    input.intSupplyPlenumT.disabled = false;
+    input.perSupplyPlenumT.disabled = true;
+  } else if (plenumConfig == "Reverse Series") {
+    input.intSupplyPlenumT.disabled = true;
+    input.perSupplyPlenumT.disabled = false;
+  } else {
+    input.intSupplyPlenumT.disabled = false;
+    input.perSupplyPlenumT.disabled = false;
+  }
+}
 
 function setDefaults() {
   var input = document.forms["input"];
